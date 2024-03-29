@@ -88,22 +88,8 @@ resource "azurerm_log_analytics_solution" "vminsights" {
 
 }
 
-########### Data sources for Log Analytics Workspace ###########
-resource "azurerm_log_analytics_datasource_windows_event" "app_1" {
-  name                = "windows-app-logs"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
-  workspace_name      = azurerm_log_analytics_workspace.law_1.name
-  event_log_name      = "Application"
-  event_types         = ["error", "information", "warning"]
-}
 
-resource "azurerm_log_analytics_datasource_windows_event" "sys_1" {
-  name                = "windows-sys-logs"
-  resource_group_name = azurerm_resource_group.resourcegroup_1.name
-  workspace_name      = azurerm_log_analytics_workspace.law_1.name
-  event_log_name      = "System"
-  event_types         = ["error", "information", "warning"]
-}
+
 
 resource "azurerm_log_analytics_datasource_windows_performance_counter" "cpu_1" {
   name                = "perf-cpu-1"

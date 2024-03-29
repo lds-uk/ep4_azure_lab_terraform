@@ -3,6 +3,7 @@ $ErrorActionPreference = "Stop"
 $WarningPreference = "SilentlyContinue"
 $VerbosePreference = "SilentlyContinue"
 
+
 # Initialize subscription
 $isAzModulePresent = Get-Module -Name Az.* -ListAvailable
 if ([String]::IsNullOrEmpty($isAzModulePresent) -eq $true) {
@@ -12,10 +13,13 @@ if ([String]::IsNullOrEmpty($isAzModulePresent) -eq $true) {
 else {
     Write-Output "Importing Az module.."
     Import-Module Az
+    Write-Output "finished import"
 }
-
+Write-Output "Connecting to Azure1"
+ 
 # Checking if connected to Azure
-if (!(Get-AzContext)) {
+
+    Write-Output "Connecting to Azure2"
     try {
         Write-Output "Connecting to Azure."
         Write-Output "Provide your credentials to access your Azure subscription - See Login Pop-up Window"
@@ -24,7 +28,8 @@ if (!(Get-AzContext)) {
     catch {
         Write-Output "Error: Cannot connect to Azure!"
     }
-}
+
+Write-Output "Connecting to Azure3"
 
 # Collect AzSubscription details to create Service principal
 $azAccount = Get-AzSubscription
@@ -32,9 +37,11 @@ $tenantId = $azAccount.TenantId
 $subscriptionId = $azAccount.Id
 $subResourceId = "/subscriptions/" + $azAccount.Id
 
-# Generate random suffix for name
-$appRandom = ("0123456789".tochararray() | sort {Get-Random})[0..2] -join ''
-$appDisplayName = "terraform-sp-$appRandom"
+Write-Output "check file"
+Out-File "test.txt"
+
+
+$appDisplayName = "terraform-sp-"
 
 # Create new SPN
 Write-Output "Creating a new SPN"
@@ -58,3 +65,5 @@ Add-Content "providers.tf" "features {}"
 Add-Content "providers.tf" "}"
 Write-Output "** appPassword saved to $appDisplayName.txt **"
 $spnPass | Out-File "$appDisplayName.txt"
+$spnAppId | Out-File "AppId.txt"
+$tenantId | Out-File "tenant_id.txt"
